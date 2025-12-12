@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Files</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="main.js"></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', () => {
+        requireAuth();
+        loadMyFiles();
+      });
+
+      async function loadMyFiles() {
+        const list = document.getElementById('list');
+        list.innerHTML = 'Loading...';
+        const res = await authFetch(`${API_BASE}/my-files`);
+        const data = await res.json();
+        if (!res.ok) {
+          list.innerHTML = data.message || 'Failed to load files';
+          return;
+        }
+        if (!data.length) {
+          list.innerHTML = 'No files yet.';
+          return;
+        }
+        list.innerHTML = '';
+        data.forEach((f) => {
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          const shareLink =
+            f.privacy === 'private' && f.shareable_token
+              ? `${API_BASE}/files/${f._id}/download?token=${f.shareable_token}`
+              : `${API_BASE}/files/${f._id}/download`;
+          item.innerHTML = `
+            <div>
+              <div>${f.originalname || f.filename}</div>
+              <div class="muted">${f.privacy.toUpperCase()} · ${(f.size / (1024 * 1024)).toFixed(2)} MB</div>
+              <div class="muted">Share link: <a href="${shareLink}" target="_blank">${shareLink}</a></div>
+            </div>
+            <div class="actions">
+              <a href="${shareLink}" class="secondary" target="_blank">Download</a>
+              <button class="secondary" onclick="deleteFile('${f._id}')">Delete</button>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      async function deleteFile(id) {
+        if (!confirm('Delete this file?')) return;
+        const res = await authFetch(`${API_BASE}/files/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.message || 'Delete failed');
+          return;
+        }
+        loadMyFiles();
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>Secure File Host</div>
+      <nav>
+        <a href="upload.html">Upload</a>
+        <a href="my-files.html">My Files</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </nav>
+    </header>
+    <main>
+      <div class="card">
+        <h2>My Files</h2>
+        <div id="list" class="list"></div>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f8f9fb;
+  color: #1c1c1c;
+}
+
+header {
+  background: #1f4b99;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  color: #fff;
+  margin-right: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+main {
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input,
+select,
+button {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cfd4dc;
+  font-size: 14px;
+}
+
+button {
+  background: #1f4b99;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #e2e6ef;
+  color: #1c1c1c;
+}
+
+.actions a.secondary {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #e2e6ef;
+  color: #1c1c1c;
+  text-decoration: none;
+  border: 1px solid #cfd4dc;
+}
+
+.list {
+  margin-top: 16px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e6e9ef;
+}
+
+.muted {
+  color: #5a6270;
+  font-size: 13px;
+}
+
+.actions button {
+  margin-left: 8px;
+}
+

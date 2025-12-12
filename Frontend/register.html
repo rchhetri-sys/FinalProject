@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="main.js"></script>
+    <script defer>
+      async function handleRegister(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
+        message.textContent = '';
+
+        const res = await fetch(`${API_BASE}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          message.textContent = data.message || 'Registration failed';
+          return;
+        }
+        setToken(data.token);
+        window.location.href = 'upload.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>Secure File Host</div>
+      <nav>
+        <a href="login.html">Login</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Create an Account</h2>
+        <form onsubmit="handleRegister(event)">
+          <input id="username" type="text" placeholder="Username" required />
+          <input id="email" type="email" placeholder="Email" required />
+          <input id="password" type="password" placeholder="Password (min 6)" minlength="6" required />
+          <button type="submit">Register</button>
+          <div id="message" class="muted"></div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Downloads</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="main.js"></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', () => {
+        loadPublic();
+      });
+
+      async function loadPublic() {
+        const list = document.getElementById('list');
+        list.innerHTML = 'Loading...';
+        const res = await fetch(`${API_BASE}/public-files`);
+        const data = await res.json();
+        if (!res.ok) {
+          list.innerHTML = data.message || 'Failed to load files';
+          return;
+        }
+        if (!data.length) {
+          list.innerHTML = 'No public files available.';
+          return;
+        }
+        list.innerHTML = '';
+        data.forEach((f) => {
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          item.innerHTML = `
+            <div>
+              <div>${f.originalname || f.filename}</div>
+              <div class="muted">${(f.size / (1024 * 1024)).toFixed(2)} MB</div>
+            </div>
+            <div class="actions">
+              <a href="${API_BASE}/files/${f._id}/download" class="secondary" target="_blank">Download</a>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>Secure File Host</div>
+      <nav>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Public Downloads</h2>
+        <div id="list" class="list"></div>
+      </div>
+    </main>
+  </body>
+</html>
+

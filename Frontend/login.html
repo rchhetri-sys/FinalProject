@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="main.js"></script>
+    <script defer>
+      async function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const message = document.getElementById('message');
+        message.textContent = '';
+
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          message.textContent = data.message || 'Login failed';
+          return;
+        }
+        setToken(data.token);
+        window.location.href = 'upload.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>Secure File Host</div>
+      <nav>
+        <a href="register.html">Register</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Welcome back</h2>
+        <form onsubmit="handleLogin(event)">
+          <input id="email" type="email" placeholder="Email" required />
+          <input id="password" type="password" placeholder="Password" required />
+          <button type="submit">Login</button>
+          <div id="message" class="muted"></div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
+

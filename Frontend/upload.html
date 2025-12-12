@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="main.js"></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', () => {
+        requireAuth();
+      });
+
+      async function handleUpload(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('file');
+        const privacy = document.getElementById('privacy').value;
+        const message = document.getElementById('message');
+        message.textContent = '';
+
+        if (!fileInput.files.length) {
+          message.textContent = 'Please choose a file';
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('privacy', privacy);
+
+        const res = await authFetch(`${API_BASE}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          message.textContent = data.message || 'Upload failed';
+          return;
+        }
+        message.textContent = 'Upload successful!';
+        fileInput.value = '';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div>Secure File Host</div>
+      <nav>
+        <a href="upload.html">Upload</a>
+        <a href="my-files.html">My Files</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </nav>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Upload a file</h2>
+        <form onsubmit="handleUpload(event)">
+          <input id="file" type="file" accept=".pdf,.mp4" required />
+          <select id="privacy" required>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+          <button type="submit">Upload</button>
+          <div class="muted" id="message"></div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
+
