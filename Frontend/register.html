@@ -23,7 +23,7 @@
 
         const data = await res.json();
         if (!res.ok) {
-          message.textContent = data.message || 'Registration failed';
+          message.textContent = data.message || '';
           return;
         }
         setToken(data.token);
