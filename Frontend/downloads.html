@@ -17,7 +17,7 @@
         const res = await fetch(`${API_BASE}/public-files`);
         const data = await res.json();
         if (!res.ok) {
-          list.innerHTML = data.message || 'Failed to load files';
+          list.innerHTML = data.message || 'Failed to load the files';
           return;
         }
         if (!data.length) {
