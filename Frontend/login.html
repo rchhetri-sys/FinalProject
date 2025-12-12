@@ -22,7 +22,7 @@
 
         const data = await res.json();
         if (!res.ok) {
-          message.textContent = data.message || 'Login failed';
+          message.textContent = data.message || 'Invalid login';
           return;
         }
         setToken(data.token);
